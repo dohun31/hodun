@@ -18,31 +18,30 @@ int main(void) {
 		analyze_hand();
 		printf("\n*****************THE**END*****************\n");
 		printf("RETRY? (Do you want to exit this game, click -1): ");
-		scanf(" %d", &retry);
+		scanf_s(" %d", &retry);
 		printf("\n\n");
 		if (retry == -1)break;
 	}
 }
 
-void init_data() { //°ÔÀÓÀ» ¿©·¯¹ø ¹İº¹ --> ¸Å¹ø µÎ ¹è¿­À» 0À¸·Î ÃÊ±âÈ­
+void init_data() { //ê²Œì„ì„ ì—¬ëŸ¬ë²ˆ ë°˜ë³µ --> ë§¤ë²ˆ ë‘ ë°°ì—´ì„ 0ìœ¼ë¡œ ì´ˆê¸°í™”
 	int rank, suit;
-
 	for (rank = 0; rank < NUM_RANKS; rank++)
 		num_in_rank[rank] = 0;
 	for (suit = 0; suit < NUM_SUITS; suit++)
 		num_in_suit[suit] = 0;
 }
 
-int overlap(char A,char B,int N) { //Áßº¹ È®ÀÎ ÇÔ¼ö
+int overlap(char A, char B, int N) { //ì¤‘ë³µ í™•ì¸ í•¨ìˆ˜
 	int check = 0;
 	for (int i = 0; i < N; i++) {
-		if (R[i] == A && S[i] == B) check = 1;//Áßº¹Àº rankµµ ¶È°°°í suitµµ ¶È°°À» ¶§
+		if (R[i] == A && S[i] == B) check = 1;//ì¤‘ë³µì€ rankë„ ë˜‘ê°™ê³  suitë„ ë˜‘ê°™ì„ ë•Œ
 	}
-	if (check == 1) return 1;//Áßº¹ÀÌ¶ó¸é 1 ¹İÈ¯
+	if (check == 1) return 1;//ì¤‘ë³µì´ë¼ë©´ 1 ë°˜í™˜
 	else return 0;
 }
 
-void read_cards(void) { //Ä«µå ÀÔ·Â¹Ş´Â ÇÔ¼ö
+void read_cards(void) { //ì¹´ë“œ ì…ë ¥ë°›ëŠ” í•¨ìˆ˜
 	char ch, rank_ch, suit_ch;
 	int rank, suit;
 
@@ -53,7 +52,7 @@ void read_cards(void) { //Ä«µå ÀÔ·Â¹Ş´Â ÇÔ¼ö
 	while (cards_read < NUM_CARDS) {
 		int check = 0;
 		printf("Enter a card(%d):", cards_read + 1);
-		scanf(" %c", &rank_ch); R[cards_read] = rank_ch; //rank¸¦ ³ªÅ¸³»´Â ÇÏ³ªÀÇ ¹®ÀÚ ÀÔ·Â
+		scanf_s(" %c", &rank_ch); R[cards_read] = rank_ch; //rankë¥¼ ë‚˜íƒ€ë‚´ëŠ” í•˜ë‚˜ì˜ ë¬¸ì ì…ë ¥
 		switch (rank_ch) {
 		case 'a': rank = 1; break;
 		case '2': rank = 2; break;
@@ -68,17 +67,17 @@ void read_cards(void) { //Ä«µå ÀÔ·Â¹Ş´Â ÇÔ¼ö
 		case 'j': rank = 11; break;
 		case 'q': rank = 12; break;
 		case 'k': rank = 13; break;
-		default: printf("\nUNKNOWN_RANK(Retry)\n\n"); check = 1; break; //Àß¸øÀÔ·ÂÇÏ¸é ´Ù½Ã
+		default: printf("\nUNKNOWN_RANK(Retry)\n\n"); check = 1; break; //ì˜ëª»ì…ë ¥í•˜ë©´ ë‹¤ì‹œ
 		}
-		scanf(" %c", &suit_ch); S[cards_read] = suit_ch;
+		scanf_s(" %c", &suit_ch); S[cards_read] = suit_ch;
 		switch (suit_ch) {
 		case 'c': suit = 0; break;
 		case 'd': suit = 1; break;
 		case 'h': suit = 2; break;
 		case 's': suit = 3; break;
-		default: printf("\nUNKNOWN_SUIT(Retry)\n\n"); check = 1; break; //Àß¸øÀÔ·ÂÇÏ¸é ´Ù½Ã
+		default: printf("\nUNKNOWN_SUIT(Retry)\n\n"); check = 1; break; //ì˜ëª»ì…ë ¥í•˜ë©´ ë‹¤ì‹œ
 		}
-		if (check == 0) { //Áßº¹ °Ë»ç
+		if (check == 0) { //ì¤‘ë³µ ê²€ì‚¬
 			if (overlap(rank_ch, suit_ch, cards_read) == 1) printf("\nDUPLICATE\n\n");
 			else {
 				num_in_rank[rank]++;
@@ -91,35 +90,46 @@ void read_cards(void) { //Ä«µå ÀÔ·Â¹Ş´Â ÇÔ¼ö
 
 int check_four_cards() {
 	int check = 0;
-	for (int rank = 1; rank < NUM_RANKS + 1; rank++) {
-		if (num_in_rank[rank] == 4) check = 1; //Æ÷Ä«µå Á¶°Ç
-	}
-	if (check == 1) return 1;
-	else return 0;
-}
-
-int check_flush() { //5Àå ¸ğµÎ µ¿ÀÏÇÑ suit
-	int check = 0;
-	for (int suit = 0; suit < NUM_RANKS; suit++) {
-		if (num_in_suit[suit] == 5) check = 1; // flush Á¶°Ç
+	for (int rank = 1; rank <= NUM_RANKS + 1; rank++) {
+		if (num_in_rank[rank] == 4) check = 1; //í¬ì¹´ë“œ ì¡°ê±´
 	}
 	if (check == 1) return 1;
 	else return 0;
 }
 
 int check_straight() {
+	int count = 0, tmp = 14;
+	for (int i = 1; i < 5; i++) {
+		count = 0;
+		if (num_in_rank[i] == 1) num_in_rank[tmp] = 1;
+		tmp++;
+	}
+	for (int rank = 1; rank <= NUM_RANKS + 4; rank++) {
+		if (num_in_rank[rank] == 1 && num_in_rank[rank + 4] == 1 && rank <= 13) {
+			count = 2;
+			for (int j = rank + 1; j < rank + 4; j++) {
+				if (num_in_rank[rank] == 1) count++;
+			}
+		}
+	}
+	if (count == 5) return 1;
+	else return 0;
+}
+
+int check_flush() { //5ì¥ ëª¨ë‘ ë™ì¼í•œ suit
 	int check = 0;
-	for (int rank = 1; rank < NUM_RANKS; rank++) {
-		if (num_in_rank[rank] == 5) check = 1; //straigth Á¶°Ç
+	for (int suit = 0; suit <= NUM_SUITS; suit++) {
+		if (num_in_suit[suit] == 5) check = 1; // flush ì¡°ê±´
 	}
 	if (check == 1) return 1;
 	else return 0;
 }
 
+
 int check_triple() {
 	int check = 0;
-	for (int rank = 1; rank < NUM_RANKS; rank++) {
-		if (num_in_rank[rank] == 3) check =1; //triple Á¶°Ç
+	for (int rank = 1; rank <= NUM_RANKS; rank++) {
+		if (num_in_rank[rank] == 3) check = 1; //triple ì¡°ê±´
 	}
 	if (check == 1) return 1;
 	else return 0;
@@ -127,19 +137,19 @@ int check_triple() {
 
 int check_pair() {
 	int count = 0;
-	for (int rank = 1; rank < NUM_RANKS; rank++) {
-		if (num_in_rank[rank] == 2) count++; //pair Á¶°Ç
+	for (int rank = 1; rank <= NUM_RANKS; rank++) {
+		if (num_in_rank[rank] == 2) count++; //pair ì¡°ê±´
 	}
 	if (count == 2) return 2;
 	else if (count == 1) return 1;
 	else return 0;
 }
 
-void analyze_hand(void) {// ¾ÕÀåÀÇ ÇÔ¼öµéÀ» ÀÌ¿ëÇÏ¿© °¡Àå ³ôÀº Ä«µå ÆĞ¸¦ ÀÎ½ÄÇÏ¿© Ãâ·ÂÇÑ´Ù.
+void analyze_hand(void) {// ì•ì¥ì˜ í•¨ìˆ˜ë“¤ì„ ì´ìš©í•˜ì—¬ ê°€ì¥ ë†’ì€ ì¹´ë“œ íŒ¨ë¥¼ ì¸ì‹í•˜ì—¬ ì¶œë ¥í•œë‹¤.
 	printf("\n");
-	if (check_straight() == 1 && check_flush() == 1) printf("Straight Flush!!\n"); //straight flush --> straightÀÌ¸é¼­ flush
-	else if (check_four_cards()==1) printf("Four Cards!!\n"); //four card
-	else if (check_triple() == 1 && check_pair() == 1) printf("Full House!!\n"); //full house --> tripleÀÌ¸é¼­ pair
+	if (check_straight() == 1 && check_flush() == 1) printf("Straight Flush!!\n"); //straight flush --> straightì´ë©´ì„œ flush
+	else if (check_four_cards() == 1) printf("Four Cards!!\n"); //four card
+	else if (check_triple() == 1 && check_pair() == 1) printf("Full House!!\n"); //full house --> tripleì´ë©´ì„œ pair
 	else if (check_flush() == 1) printf("Flush!!\n"); //flush
 	else if (check_straight() == 1) printf("Straight!!\n"); // straght
 	else if (check_triple() == 1) printf("Triple!!\n"); //triple
